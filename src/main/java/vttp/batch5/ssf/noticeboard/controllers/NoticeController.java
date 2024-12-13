@@ -60,8 +60,11 @@ public class NoticeController {
     public void healthCheck(){
         if(noticeService.redisHealthCheck()){
             //healthy response
+            System.out.println("Healthy response in the controller");
+        }else{
+            System.out.println("UNHealthy response in the controller");
         }
-        
+      
         //unhealthy response;
 
 
