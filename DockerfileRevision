@@ -17,7 +17,7 @@ FROM eclipse-temurin:23-jre-noble
 
 WORKDIR /app
 
-COPY --from=builder /src/target/revision-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /src/target/noticeboard-0.0.1-SNAPSHOT.jar app.jar
 COPY customers-100.csv .
 
 # check if curl command is available

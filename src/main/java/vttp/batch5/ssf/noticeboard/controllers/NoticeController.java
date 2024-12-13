@@ -13,7 +13,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import jakarta.validation.Valid;
 import vttp.batch5.ssf.noticeboard.models.Notice;
 import vttp.batch5.ssf.noticeboard.models.ServerResponse;
-import vttp.batch5.ssf.noticeboard.models.notice;
 import vttp.batch5.ssf.noticeboard.services.NoticeService;
 
 // Use this class to write your request handlers

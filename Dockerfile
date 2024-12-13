@@ -19,7 +19,7 @@ FROM eclipse-temurin:23-jre-noble
 
 WORKDIR /app
 
-COPY --from=builder /src/target/vttp5_ssf_day09practice-0.0.1-SNAPSHOT.jar app.jar
+COPY --from=builder /src/target/noticeboard-0.0.1-SNAPSHOT.jar app.jar
 #the /src at the start is the workdir that was declared in the first stage
 
 
@@ -32,8 +32,14 @@ COPY --from=builder /src/target/vttp5_ssf_day09practice-0.0.1-SNAPSHOT.jar app.j
 #SERVER_PORT is the one that links to the spring application. so this takes the railway port given and uses that in our program.
 #ENTRYPOINT SERVER_PORT=${PORT} java -jar app.jar
 
+
+RUN apt update && apt install -y curl
+
 #This is the one that worked with railway previously.
 ENV SERVER_PORT 3000
 EXPOSE ${SERVER_PORT}
+
+HEALTHCHECK --interval=60s --timeout=10s --start-period=120s --retries=3 \
+   CMD curl http://localhost:${SERVER_PORT}/status || exit 1
 #ALWAYS REMEMBER TO CHANGE THE NAME TO CURRENT PROJECT NAME
 ENTRYPOINT SERVER_PORT=${SERVER_PORT} java -jar app.jar
