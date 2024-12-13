@@ -1,11 +1,13 @@
 package vttp.batch5.ssf.noticeboard.services;
 
-import java.net.http.HttpHeaders;
 import java.util.Date;
 
 import org.json.JSONArray;
 import org.springframework.http.HttpEntity;
+import org.springframework.http.HttpHeaders;
+import org.springframework.http.HttpMethod;
 import org.springframework.http.MediaType;
+import org.springframework.http.RequestEntity;
 import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Service;
 import org.springframework.web.client.RestTemplate;
@@ -28,14 +30,14 @@ public class NoticeService {
 	public void postToNoticeServer(Notice notice) {
 		//JsonObjectBuilder job = new JsonObjectBuilder();
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
- 		JsonObject jsonObject = factory.createObjectBuilder()
+		JsonObject jsonObject = factory.createObjectBuilder()
 		.add("title",notice.getTitle())
 		.add("poster",notice.getPoster())
 		.add("postDate",convertDateToEpoch(notice.getPostDate()))
 		//.add(convertArrayToJsonArray(notice.getCategories())) //THIS ONE MAY NEED EXTRA CODE
 		.add("text", notice.getText())
 		.build();
-		jsonObject.put("categories", convertArrayToJsonArray(notice.getCategories()));
+		//jsonObject.put("categories", convertArrayToJsonArray(notice.getCategories()));
 		System.out.println("built the json object, here it is" + jsonObject.toString());
 
 		String jsonString = jsonObject.toString();
@@ -43,13 +45,20 @@ public class NoticeService {
 		//replace this with new url and allow it to be changed externally.
 		String url = "https://publishing-production-d35a.up.railway.app/notice";
 
-		HttpHeaders headers = new HttpHeaders(String);
+		String testString = "{\r\n" + //
+						"    \"title\":\"test5\",\r\n" + //
+						"    \"poster\":\"test1@email.com\",\r\n" + //
+						"    \"postDate\":1735488000000,\r\n" + //
+						"    \"categories\": [\"sport\"],\r\n" + //
+						"    \"text\":\"test12\"\r\n" + //
+						"}";
+
+		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+		HttpEntity<String> entity = new HttpEntity<String>(jsonString, headers);
 
-		HttpEntity<String> entity = new HttpEntity<String>(jsonString, header);
-
-		String response = restTemplate.postForObject(url, , null);
-		System.out.println(response);
+		String response = restTemplate.postForObject(url, entity, String.class);
+		System.out.println("RESPONSE FROM SERVER:" + response);
 
 	}
 
