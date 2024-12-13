@@ -1,6 +1,7 @@
 package vttp.batch5.ssf.noticeboard.controllers;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.validation.BindingResult;
@@ -57,12 +58,14 @@ public class NoticeController {
     }
 
     @GetMapping("/status")
-    public void healthCheck(){
+    public ResponseEntity<String> healthCheck(){
         if(noticeService.redisHealthCheck()){
             //healthy response
             System.out.println("Healthy response in the controller");
+            return ResponseEntity.ok("{}");
         }else{
             System.out.println("UNHealthy response in the controller");
+            return ResponseEntity.status(503).body("{}");
         }
       
         //unhealthy response;

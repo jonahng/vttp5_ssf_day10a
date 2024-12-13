@@ -122,7 +122,18 @@ public class NoticeService {
 			System.out.println("System unhealthy");
 			return false;
 		}
+
+
+
+
+		HttpHeaders headers = new HttpHeaders();
+		headers.setContentType(MediaType.APPLICATION_JSON);
+
+
 		return true;
+
+
+
 	}
 
 	
