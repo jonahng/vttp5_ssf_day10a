@@ -1,6 +1,7 @@
 package vttp.batch5.ssf.noticeboard.services;
 
 import java.io.StringReader;
+import java.util.ArrayList;
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -45,21 +46,32 @@ public class NoticeService {
 	// and return any type
 	public ServerResponse postToNoticeServer(Notice notice) {
 		//JsonObjectBuilder job = new JsonObjectBuilder();
+
+
+		ArrayList<String> categoriesArray = new ArrayList<String>();
+
+		for(String category: notice.getCategories()){
+			categoriesArray.add(category);
+			
+		}
+		System.out.println("categoriesArray:" + categoriesArray.toString());
+		
+		
+
+
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObject jsonObject = factory.createObjectBuilder()
 		.add("title",notice.getTitle())
 		.add("poster",notice.getPoster())
 		.add("postDate",convertDateToEpoch(notice.getPostDate()))
-		//.add(convertArrayToJsonArray(notice.getCategories())) //THIS ONE MAY NEED EXTRA CODE
+		//.add("categories", categoriesArray.toString() ) //THIS ONE MAY NEED EXTRA CODE
 		.add("text", notice.getText())
 		.build();
-		//jsonObject.put("categories", convertArrayToJsonArray(notice.getCategories()));
+		
+
 		System.out.println("built the json object, here it is" + jsonObject.toString());
 
 		String jsonString = jsonObject.toString();
-
-		//replace this with new url and allow it to be changed externally.
-		//String url = "https://publishing-production-d35a.up.railway.app/notice";
 
 		String unsuccessfulPostContent = "posting this to get error from server";
 
@@ -70,35 +82,36 @@ public class NoticeService {
 		//JSON STRING GOES INTO HTTP ENTITY
 		HttpEntity<String> entity = new HttpEntity<String>(jsonString, headers);
 
-		String response = restTemplate.postForObject(apiurl, entity, String.class);
+		String response = "No response";
+
+		String idReceived = "noid";
+		String errorMessage = "nomessage";
+
+		try {
+		response = restTemplate.postForObject(apiurl, entity, String.class);
 		System.out.println("posted the following to the server: " + entity);
 		System.out.println("RESPONSE FROM SERVER:" + response);
-
-
 		//Make this add when response is successful only.
 		noticeRepository.insertNotices("successfulNotice", jsonString); 
 
 		JsonReader jsonReader = Json.createReader(new StringReader(response));
         JsonObject jo1 = jsonReader.readObject();
-		
-		String idReceived = "noid";
-		String errorMessage = "nomessage";
-		
-		try {
-			String messageReceived = jo1.getString("message");
-			System.out.println("Message RECEIVED FROM SERVER:" + messageReceived);
-			errorMessage = messageReceived;
-		} catch (Exception e) {
-			// TODO: handle exception
-		}
-		
-		try {
-			String idFromServer = jo1.getString("id");
+		String idFromServer = jo1.getString("id");
 			System.out.println("ID RECEIVED FROM SERVER:" + idFromServer);
 			idReceived = idFromServer;
+		
+			
 		} catch (Exception e) {
 			// TODO: handle exception
+			//String messageReceived = jo1.getString("message");
+			//System.out.println("Message RECEIVED FROM SERVER:" + messageReceived);
+			//errorMessage = messageReceived;
+
 		}
+
+
+
+		
 
 		ServerResponse serverResponse = new ServerResponse();
 		serverResponse.setId(idReceived);

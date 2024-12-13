@@ -1,5 +1,6 @@
 package vttp.batch5.ssf.noticeboard.models;
 
+//This model is to keep the response from the apiserver, mainly the id generated or the errormessage given.
 public class ServerResponse {
     public String id;
     public String message;

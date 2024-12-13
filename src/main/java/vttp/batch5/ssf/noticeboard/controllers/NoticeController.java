@@ -42,17 +42,21 @@ public class NoticeController {
             System.out.println("notice not accepted for binding errors");
             return "notice";
         }
+
+        //ServerResponse is a model i created to contain the id or errormessage received from the api server, after sending the notice
         ServerResponse serverResponse = new ServerResponse();
         serverResponse = noticeService.postToNoticeServer(notice);
 
-        if(!serverResponse.getId().equals("noid")){ //This checks whether an id was received from the server or not
+        if(!serverResponse.getId().equals("noid")){ //This checks whether an id was received from the apiserver after sending the data
             System.out.println("Controller has the id!" + serverResponse.getId());
             model.addAttribute("id",serverResponse.getId());
             return "success";
+            //this shows the success page if an id was received from the apiserver
         }
         //Change this to an error page or success page
         model.addAttribute("errorMessage", serverResponse.getMessage()); //this takes the errormessage from the server and adds it to model.
         return "badresponse"; //change this to the next page!!
+        //this shows the badresponse html page when an errormessage is received from the apiserver
 
     }
 
