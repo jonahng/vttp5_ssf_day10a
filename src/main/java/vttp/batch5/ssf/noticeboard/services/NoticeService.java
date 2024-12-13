@@ -3,6 +3,7 @@ package vttp.batch5.ssf.noticeboard.services;
 import java.util.Date;
 
 import org.json.JSONArray;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -19,9 +20,14 @@ import jakarta.json.JsonBuilderFactory;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
 import vttp.batch5.ssf.noticeboard.models.Notice;
+import vttp.batch5.ssf.noticeboard.repositories.NoticeRepository;
 
 @Service
 public class NoticeService {
+
+	@Autowired
+	NoticeRepository noticeRepository;
+
 	RestTemplate restTemplate = new RestTemplate();
 
 	// TODO: Task 3
@@ -45,20 +51,18 @@ public class NoticeService {
 		//replace this with new url and allow it to be changed externally.
 		String url = "https://publishing-production-d35a.up.railway.app/notice";
 
-		String testString = "{\r\n" + //
-						"    \"title\":\"test5\",\r\n" + //
-						"    \"poster\":\"test1@email.com\",\r\n" + //
-						"    \"postDate\":1735488000000,\r\n" + //
-						"    \"categories\": [\"sport\"],\r\n" + //
-						"    \"text\":\"test12\"\r\n" + //
-						"}";
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
 		HttpEntity<String> entity = new HttpEntity<String>(jsonString, headers);
 
 		String response = restTemplate.postForObject(url, entity, String.class);
+		System.out.println("posted the following to the server: " + entity);
 		System.out.println("RESPONSE FROM SERVER:" + response);
+
+
+		//Make this add when response is successful only.
+		noticeRepository.insertNotices("successfulNotice", jsonString); 
 
 	}
 

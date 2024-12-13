@@ -7,9 +7,9 @@ import org.springframework.stereotype.Repository;
 
 @Repository //added this myself
 public class NoticeRepository {
-	//@Autowired
-	//@Qualifier("notice")
-	//RedisTemplate<String, Object> template;
+	@Autowired
+	@Qualifier("notice")
+	RedisTemplate<String, Object> template;
 
 
 
@@ -24,9 +24,17 @@ public class NoticeRepository {
 	 * redis-cli command 
 	 * 	hdel myhashmap a_key
 	 *
-	 *
+	 *rpush key value
 	 */
-	public void insertNotices() {
+	public void insertNotices(String key, String value) {
+		//THE redis-cli command is: 
+		// rpush key value
+		template.opsForList().rightPush(key,value);
+		//THE redis-cli command is: 
+		// rpush key value
+
+
+		System.out.println("added notice to repo!" + value);
 
 	}
 
