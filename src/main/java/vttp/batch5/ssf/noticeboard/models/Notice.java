@@ -3,12 +3,15 @@ package vttp.batch5.ssf.noticeboard.models;
 import java.util.Arrays;
 import java.util.Date;
 
+import org.springframework.format.annotation.DateTimeFormat;
+
 public class Notice {
 
     private String title;
     
     private String poster;
 
+    @DateTimeFormat(iso = DateTimeFormat.ISO.DATE)
     private Date postDate;
 
     private String[] categories;

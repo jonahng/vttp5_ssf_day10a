@@ -3,6 +3,8 @@ package vttp.batch5.ssf.noticeboard.controllers;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
+import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 
 import vttp.batch5.ssf.noticeboard.models.Notice;
@@ -22,6 +24,13 @@ public class NoticeController {
         Notice notice = new Notice();
         model.addAttribute("notice", notice);
         return "notice";
+    }
+
+
+    @PostMapping("/notice")
+    public void getForm(@ModelAttribute("notice") Notice notice){
+        System.out.println("notice recieved:" + notice.toString());
+
     }
 
 }
