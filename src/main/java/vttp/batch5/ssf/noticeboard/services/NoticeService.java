@@ -45,17 +45,18 @@ public class NoticeService {
 	// You can change the signature of this method by adding any number of parameters
 	// and return any type
 	public ServerResponse postToNoticeServer(Notice notice) {
-		//JsonObjectBuilder job = new JsonObjectBuilder();
 
 
+		//this puts the categories data into the json object.
 		ArrayList<String> categoriesArray = new ArrayList<String>();
-
 		for(String category: notice.getCategories()){
 			categoriesArray.add(category);
 			
 		}
 		System.out.println("categoriesArray:" + categoriesArray.toString());
-		
+		JsonArray categoriesJsonArray = Json.createArrayBuilder()
+		.add(categoriesArray.toString())
+		.build();
 		
 
 
@@ -64,7 +65,7 @@ public class NoticeService {
 		.add("title",notice.getTitle())
 		.add("poster",notice.getPoster())
 		.add("postDate",convertDateToEpoch(notice.getPostDate()))
-		//.add("categories", categoriesArray.toString() ) //THIS ONE MAY NEED EXTRA CODE
+		.add("categories", categoriesJsonArray ) //THIS ONE MAY NEED EXTRA CODE
 		.add("text", notice.getText())
 		.build();
 		
