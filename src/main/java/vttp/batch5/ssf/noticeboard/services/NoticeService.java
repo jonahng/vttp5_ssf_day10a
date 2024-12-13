@@ -5,6 +5,7 @@ import java.util.Date;
 
 import org.json.JSONArray;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.HttpEntity;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpMethod;
@@ -31,6 +32,12 @@ public class NoticeService {
 	@Autowired
 	NoticeRepository noticeRepository;
 
+
+	@Value("${apiurl}")
+	public String apiurl;
+
+
+
 	RestTemplate restTemplate = new RestTemplate();
 
 	// TODO: Task 3
@@ -52,7 +59,7 @@ public class NoticeService {
 		String jsonString = jsonObject.toString();
 
 		//replace this with new url and allow it to be changed externally.
-		String url = "https://publishing-production-d35a.up.railway.app/notice";
+		//String url = "https://publishing-production-d35a.up.railway.app/notice";
 
 		String unsuccessfulPostContent = "posting this to get error from server";
 
@@ -63,7 +70,7 @@ public class NoticeService {
 		//JSON STRING GOES INTO HTTP ENTITY
 		HttpEntity<String> entity = new HttpEntity<String>(jsonString, headers);
 
-		String response = restTemplate.postForObject(url, entity, String.class);
+		String response = restTemplate.postForObject(apiurl, entity, String.class);
 		System.out.println("posted the following to the server: " + entity);
 		System.out.println("RESPONSE FROM SERVER:" + response);
 
