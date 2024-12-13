@@ -45,13 +45,13 @@ public class NoticeController {
         ServerResponse serverResponse = new ServerResponse();
         serverResponse = noticeService.postToNoticeServer(notice);
 
-        if(!serverResponse.getId().equals("noid")){
+        if(!serverResponse.getId().equals("noid")){ //This checks whether an id was received from the server or not
             System.out.println("Controller has the id!" + serverResponse.getId());
             model.addAttribute("id",serverResponse.getId());
             return "success";
         }
         //Change this to an error page or success page
-        model.addAttribute("errorMessage", serverResponse.getMessage());
+        model.addAttribute("errorMessage", serverResponse.getMessage()); //this takes the errormessage from the server and adds it to model.
         return "badresponse"; //change this to the next page!!
 
     }
