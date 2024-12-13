@@ -11,6 +11,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 
 import jakarta.validation.Valid;
 import vttp.batch5.ssf.noticeboard.models.Notice;
+import vttp.batch5.ssf.noticeboard.models.ServerResponse;
 import vttp.batch5.ssf.noticeboard.models.notice;
 import vttp.batch5.ssf.noticeboard.services.NoticeService;
 
@@ -41,8 +42,14 @@ public class NoticeController {
             System.out.println("notice not accepted for binding errors");
             return "notice";
         }
-        
-        noticeService.postToNoticeServer(notice);
+        ServerResponse serverResponse = new ServerResponse();
+        serverResponse = noticeService.postToNoticeServer(notice);
+
+        if(!serverResponse.getId().equals("noid")){
+            System.out.println("Controller has the id!" + serverResponse.getId());
+            model.addAttribute("id",serverResponse.getId());
+            return "success";
+        }
         //Change this to an error page or success page
         return "notice"; //change this to the next page!!
 

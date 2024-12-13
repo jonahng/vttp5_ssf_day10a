@@ -1,5 +1,6 @@
 package vttp.batch5.ssf.noticeboard.services;
 
+import java.io.StringReader;
 import java.util.Date;
 
 import org.json.JSONArray;
@@ -19,7 +20,9 @@ import jakarta.json.JsonArrayBuilder;
 import jakarta.json.JsonBuilderFactory;
 import jakarta.json.JsonObject;
 import jakarta.json.JsonObjectBuilder;
+import jakarta.json.JsonReader;
 import vttp.batch5.ssf.noticeboard.models.Notice;
+import vttp.batch5.ssf.noticeboard.models.ServerResponse;
 import vttp.batch5.ssf.noticeboard.repositories.NoticeRepository;
 
 @Service
@@ -33,7 +36,7 @@ public class NoticeService {
 	// TODO: Task 3
 	// You can change the signature of this method by adding any number of parameters
 	// and return any type
-	public void postToNoticeServer(Notice notice) {
+	public ServerResponse postToNoticeServer(Notice notice) {
 		//JsonObjectBuilder job = new JsonObjectBuilder();
 		JsonBuilderFactory factory = Json.createBuilderFactory(null);
 		JsonObject jsonObject = factory.createObjectBuilder()
@@ -51,9 +54,13 @@ public class NoticeService {
 		//replace this with new url and allow it to be changed externally.
 		String url = "https://publishing-production-d35a.up.railway.app/notice";
 
+		String unsuccessfulPostContent = "posting this to get error from server";
+
 
 		HttpHeaders headers = new HttpHeaders();
 		headers.setContentType(MediaType.APPLICATION_JSON);
+
+		//JSON STRING GOES INTO HTTP ENTITY
 		HttpEntity<String> entity = new HttpEntity<String>(jsonString, headers);
 
 		String response = restTemplate.postForObject(url, entity, String.class);
@@ -63,6 +70,36 @@ public class NoticeService {
 
 		//Make this add when response is successful only.
 		noticeRepository.insertNotices("successfulNotice", jsonString); 
+
+		JsonReader jsonReader = Json.createReader(new StringReader(response));
+        JsonObject jo1 = jsonReader.readObject();
+		
+		String idReceived = "noid";
+		String errorMessage = "nomessage";
+		
+		try {
+			String messageReceived = jo1.getString("message");
+			System.out.println("Message RECEIVED FROM SERVER:" + messageReceived);
+			errorMessage = messageReceived;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+		try {
+			String idFromServer = jo1.getString("id");
+			System.out.println("ID RECEIVED FROM SERVER:" + idFromServer);
+			idReceived = idFromServer;
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+
+		ServerResponse serverResponse = new ServerResponse();
+		serverResponse.setId(idReceived);
+		serverResponse.setMessage(errorMessage);
+		return serverResponse;
+		
+		
+
 
 	}
 
