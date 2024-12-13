@@ -39,4 +39,25 @@ public class NoticeRepository {
 	}
 
 
+	public String getHealthCheckKey(){
+
+		
+		String randomKeyFromRedis = "nokeyfromredis";
+
+		try {
+			randomKeyFromRedis = template.randomKey();
+			//The redis-cli command is:
+			//RANDOMKEY
+			//this command will return a random key from the current database
+
+			
+		} catch (Exception e) {
+			// TODO: handle exception
+		}
+		
+
+		return randomKeyFromRedis;
+	}
+
+
 }

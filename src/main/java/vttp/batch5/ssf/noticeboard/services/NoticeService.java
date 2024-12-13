@@ -114,5 +114,16 @@ public class NoticeService {
 		return categories;
 	}
 
+	public Boolean redisHealthCheck(){
+		String redisRandomKey = noticeRepository.getHealthCheckKey();
+		Boolean healthy = true;
+		System.out.println("the redis random key is: " + redisRandomKey);
+		if(redisRandomKey.equals("nokeyfromredis")){
+			System.out.println("System unhealthy");
+			return false;
+		}
+		return true;
+	}
+
 	
 }

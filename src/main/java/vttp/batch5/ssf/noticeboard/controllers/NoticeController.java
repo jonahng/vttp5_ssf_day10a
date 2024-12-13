@@ -51,7 +51,19 @@ public class NoticeController {
             return "success";
         }
         //Change this to an error page or success page
-        return "notice"; //change this to the next page!!
+        model.addAttribute("errorMessage", serverResponse.getMessage());
+        return "badresponse"; //change this to the next page!!
+
+    }
+
+    @GetMapping("/status")
+    public void healthCheck(){
+        if(noticeService.redisHealthCheck()){
+            //healthy response
+        }
+        
+        //unhealthy response;
+
 
     }
 
